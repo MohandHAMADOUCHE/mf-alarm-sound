@@ -36,7 +36,7 @@ Firefox : le bouton se place dans la barre d’outils (`default_area: navbar`). 
 - Intervalle du bip, son, volume : onglet Réglages
 - **Ack** : met en sourdine les alarmes affichées ; une **nouvelle** alarme → son + popup
 - La veille suit **un seul onglet** ; les autres pages du même site sont ignorées
-- **Onglet fantôme** : si l’onglet de veille est fermé, il est recréé en arrière-plan. L’URL / les apps du filtre sont resynchronisées dès qu’elles changent sur l’onglet de veille. À l’alarme → popup seulement ; **Ouvrir MF** / **Ack** ramène l’onglet au premier plan
+- Si l’onglet de veille est fermé alors que la veille est active, un **nouvel onglet** Overview est rouvert en arrière-plan (même URL / filtres, resync dès qu’ils changent). À l’alarme → popup seulement ; **Ouvrir MF** / **Ack** ramène cet onglet au premier plan. Pour le fermer définitivement : désactiver la veille d’abord
 - Fin d’alarme : fermeture automatique de la popup d’alerte
 
 Sources audio (CC0) : `SOUNDS.md`.
