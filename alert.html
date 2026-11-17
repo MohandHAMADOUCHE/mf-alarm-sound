@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>MF Alarm</title>
+  <style>
+    html, body { height: 100%; }
+    body {
+      box-sizing: border-box;
+      font: 14px/1.4 system-ui, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #1a1a1a;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-width: 480px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; flex: 0 0 auto; }
+    .brand img { width: 40px; height: 40px; flex: 0 0 auto; }
+    h1 { font-size: 18px; margin: 0; color: #ff5252; line-height: 1.2; }
+    #meta { color: #bbb; font-size: 12px; margin-bottom: 10px; flex: 0 0 auto; }
+    #keys {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 12px;
+      overflow: auto;
+      flex: 1 1 auto;
+      min-height: 120px;
+      margin-bottom: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 12px;
+    }
+    .actions { display: flex; gap: 8px; flex: 0 0 auto; }
+    button {
+      flex: 1;
+      padding: 12px;
+      border: 0;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #ack { background: #c62828; color: #fff; }
+    #open { background: #37474f; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="brand">
+    <img src="icons/logo.svg" alt="" width="40" height="40" />
+    <h1>Alarme Overview</h1>
+  </div>
+  <div id="meta">…</div>
+  <div id="keys">…</div>
+  <div class="actions">
+    <button id="ack" type="button">Ack</button>
+    <button id="open" type="button">Ouvrir MF</button>
+  </div>
+  <script src="alert.js"></script>
+</body>
+</html>

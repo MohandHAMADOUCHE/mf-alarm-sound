@@ -1,0 +1,18 @@
+# Build artifacts
+dist/
+*.xpi
+*.zip
+*.crx
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local
+*.log
+.env
+.env.*

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { margin: 0; }
+    body {
+      font: 13px/1.35 system-ui, sans-serif;
+      margin: 0;
+      padding: 14px;
+      width: 320px;
+      max-width: 100%;
+      overflow-x: hidden;
+      color: #222;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+    .brand img { width: 32px; height: 32px; flex: 0 0 auto; }
+    h1 { font-size: 15px; margin: 0; line-height: 1.2; }
+    .tabs { display: flex; gap: 0; margin: 0 0 10px; border-bottom: 1px solid #ddd; }
+    .tabs button {
+      flex: 1; margin: 0; padding: 8px 6px; border: 0; border-radius: 0;
+      background: transparent; font-weight: 600; color: #666; cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tabs button.active { color: #222; border-bottom-color: #ff7900; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    label { display: block; margin: 10px 0 4px; font-weight: 600; }
+    select, input[type="range"] { width: 100%; box-sizing: border-box; }
+    .row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .row label { margin: 0; font-weight: 500; flex: 1; }
+    .spots { margin-top: 12px; }
+    .spots > strong { display: block; margin-bottom: 2px; }
+    .spots .hint { font-size: 11px; color: #666; margin: 0 0 8px; }
+    .spot-row {
+      display: flex; align-items: center;
+      gap: 8px; margin: 0; width: 100%;
+    }
+    .spot-opt {
+      display: flex; align-items: center; gap: 4px;
+      flex: 1 1 0; min-width: 0; margin: 0;
+      font-weight: 500; font-size: 12px; cursor: pointer;
+    }
+    .spot-opt input { margin: 0; flex: 0 0 auto; }
+    /* Chevron Overview : pointes des deux côtés (> <) */
+    .swatch {
+      width: 26px; height: 12px; flex: 0 0 auto;
+      background: repeating-linear-gradient(
+        -45deg, var(--c1), var(--c1) 3px, var(--c2) 3px, var(--c2) 6px
+      );
+      clip-path: polygon(
+        0 50%,
+        7px 0,
+        calc(100% - 7px) 0,
+        100% 50%,
+        calc(100% - 7px) 100%,
+        7px 100%
+      );
+    }
+    .swatch.error { --c1: #c62828; --c2: #ef5350; }
+    .swatch.expired { --c1: #6a1b9a; --c2: #ab47bc; }
+    .swatch.warn { --c1: #ef6c00; --c2: #ffb74d; }
+    button.action { padding: 8px; font-weight: 600; cursor: pointer; }
+    .actions { display: flex; gap: 6px; margin: 8px 0 0; }
+    .actions .action { flex: 1; margin: 0; min-width: 0; font-size: 12px; }
+    #test { width: 100%; margin-top: 12px; margin-bottom: 4px; }
+    #status { margin-bottom: 8px; padding: 6px 8px; border-radius: 6px; background: #eee; }
+    #status.on { background: #2e7d32; color: #fff; }
+    #status.off { background: #78909c; color: #fff; }
+    #status.snooze { background: #fb8c00; color: #111; }
+    #status.hint { background: #c62828; color: #fff; }
+    #scope {
+      display: flex; align-items: center; gap: 8px;
+      background: #f5f5f5; border-radius: 6px; padding: 8px; margin: 8px 0;
+      font-size: 12px; color: #444;
+    }
+    #scopeText { flex: 1; min-width: 0; white-space: pre-line; }
+    #gotoWatch {
+      flex: 0 0 auto; margin: 0; padding: 4px 8px; font-size: 11px; font-weight: 600;
+      cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #fff; color: #222;
+      display: none;
+    }
+    #gotoWatch:hover { border-color: #ff7900; color: #e65100; }
+    #apps {
+      background: #f5f5f5; border-radius: 6px; padding: 8px; margin: 0 0 8px;
+      font-size: 12px; color: #444; min-height: 2.4em;
+    }
+    #apps strong { display: block; margin-bottom: 4px; color: #222; }
+    #apps ul { margin: 0; padding-left: 18px; }
+    #apps li { margin: 2px 0; }
+    #apps .empty { color: #888; }
+    #unsnooze { background: #ff8f00; color: #111; display: none; }
+    #reset {
+      background: #fff; color: #444; border: 1px solid #ccc;
+      display: none; font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="brand">
+    <img src="icons/logo.svg" alt="" width="32" height="32" />
+    <h1>MF Alarm Sound</h1>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" id="tabVeille" class="active" role="tab" aria-selected="true">Veille</button>
+    <button type="button" id="tabReglages" role="tab" aria-selected="false">Réglages</button>
+  </div>
+
+  <div id="panelVeille" class="panel active" role="tabpanel">
+    <div id="status" class="off">Veille inactive</div>
+    <div class="actions">
+      <button id="toggle" class="action" type="button">Activer</button>
+      <button id="unsnooze" class="action" type="button">Lever</button>
+      <button id="reset" class="action" type="button">Réinit.</button>
+    </div>
+    <div id="scope">
+      <button type="button" id="gotoWatch">Y aller</button>
+      <span id="scopeText">Place Overview au premier plan, puis active la veille.</span>
+    </div>
+    <div id="apps"><span class="empty">Aucune application lue sur le filtre Overview.</span></div>
+  </div>
+
+  <div id="panelReglages" class="panel" role="tabpanel" hidden>
+    <label for="sound">Son</label>
+    <select id="sound">
+      <option value="police" selected>Police</option>
+      <option value="pompier">Pompiers (deux-tons)</option>
+      <option value="bateau">Navire</option>
+      <option value="bateauLoin">Navire (lointain)</option>
+      <option value="airhorn">Avertisseur véhicule</option>
+      <option value="train">Ferroviaire</option>
+      <option value="siren">Synthétique — alerte</option>
+      <option value="beep">Synthétique — signal court</option>
+      <option value="double">Synthétique — double signal</option>
+      <option value="low">Synthétique — grave</option>
+      <option value="wav">Synthétique — générique</option>
+    </select>
+
+    <label for="volume">Volume <span id="volLabel">10</span>%</label>
+    <input id="volume" type="range" min="1" max="100" value="10" />
+
+    <button id="test" class="action" type="button">Tester l’alerte</button>
+
+    <label for="interval">Intervalle du bip</label>
+    <select id="interval">
+      <option value="15000">15 s</option>
+      <option value="30000" selected>30 s</option>
+      <option value="60000">1 min</option>
+    </select>
+
+    <div class="spots">
+      <strong>Alerter sur</strong>
+      <p class="hint">Seules les alarmes apparues depuis moins de 10 minutes.</p>
+      <div class="spot-row">
+        <label class="spot-opt" for="spotError">
+          <span class="swatch error" aria-hidden="true"></span>
+          Erreur
+          <input id="spotError" type="checkbox" checked />
+        </label>
+        <label class="spot-opt" for="spotExpired">
+          <span class="swatch expired" aria-hidden="true"></span>
+          Expiré
+          <input id="spotExpired" type="checkbox" checked />
+        </label>
+        <label class="spot-opt" for="spotWarn">
+          <span class="swatch warn" aria-hidden="true"></span>
+          Warning
+          <input id="spotWarn" type="checkbox" checked />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
