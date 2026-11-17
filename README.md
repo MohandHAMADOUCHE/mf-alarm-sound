@@ -11,6 +11,10 @@ Extension MF Alarm Sound : alerte sonore + popup Ack quand des pastilles d’ala
 
 ## Installation
 
+Firefox (recommandé) : [addons.mozilla.org — MF Alarm Sound](https://addons.mozilla.org/fr/firefox/addon/mf-alarm-sound/)
+
+Dev / Edge :
+
 ```bash
 ./scripts/pack.sh
 ```
@@ -19,7 +23,7 @@ Version unique : fichier `VERSION` (stampée dans les 2 manifests au pack).
 
 | Navigateur | Fichier |
 |---|---|
-| Firefox | `dist/mf-alarm-sound-*.xpi` via `about:debugging` |
+| Firefox | AMO (ci-dessus) ou `dist/mf-alarm-sound-*.xpi` via `about:debugging` |
 | Edge / Chrome | dossier `dist/chromium` (mode développeur) |
 
 Puis : Overview au premier plan → icône de l’extension → **Activer**.
